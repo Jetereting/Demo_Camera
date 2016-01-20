@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/login_background">
+
+    <EditText
+        android:id="@+id/edt_login_username"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="50%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="44.5%"
+        app:layout_marginLeftPercent="11%"
+        android:hint="手机号"
+        android:inputType="number"
+        android:gravity="center"
+        android:background="@null" />
+
+    <EditText
+        android:id="@+id/edt_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="80%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="55%"
+        app:layout_marginLeftPercent="11%"
+        android:hint="动态验证码"
+        android:inputType="number"
+        android:gravity="center"
+        android:background="@null" />
+    <!-- 获取动态验证码按钮-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="25%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="44.5%"
+        app:layout_marginLeftPercent="63%"
+        android:background="@null"
+        android:text="获取动态验证码"
+        android:textSize="22px"
+        android:textColor="#89000000"/>
+
+    <!-- 登录按钮-->
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="80%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="65%"
+        app:layout_marginLeftPercent="11%"
+        android:background="@null"
+        android:text="登录"
+        android:textColor="#ffffff"
+        android:textSize="33px"/>
+
+    <!-- 微博登录-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="10%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="87%"
+        app:layout_marginLeftPercent="39%"
+        android:background="@null" />
+
+    <!-- 微信登录-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="10%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="87%"
+        app:layout_marginLeftPercent="54%"
+        android:background="@null" />
+    <!-- 注册-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="40%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="73%"
+        app:layout_marginLeftPercent="11%"
+        android:background="@null"
+        android:text="没有帐号？"
+        android:gravity="right"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/tev_register"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="40%"
+        app:layout_heightPercent="7%"
+        app:layout_marginTopPercent="73%"
+        app:layout_marginLeftPercent="51%"
+        android:background="@null"
+        android:text="立即注册"
+        android:textColor="#106bcc"
+        android:textSize="20sp"/>
+
+
+</com.zhy.android.percent.support.PercentFrameLayout>

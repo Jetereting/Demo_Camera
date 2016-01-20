@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.magic.demo_camera"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="19" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.magic.demo_camera.LoginActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+         <activity android:name="net.blogjava.mobile.Main" />
+        <activity android:name="com.magic.demo_camera.MainActivity" />
+        <activity android:name="com.magic.demo_camera.RegisterActiviyt" />
+        <activity android:name="com.magic.demo_camera.MyTourActivity" />
+        <activity android:name="com.magic.demo_camera.MyHouseActivity" />
+        <activity android:name="com.magic.demo_camera.WaitUploadActivity" />
+        <activity android:name="com.magic.demo_camera.LookShareActivity" />
+        <activity android:name="com.magic.demo_camera.ShowShareActivity" />
+        <activity android:name="com.magic.demo_camera.ShowAlbumItemPhoto" />
+        <!-- 上传图片 Activity相关 -->
+
+        <activity android:name="com.magic.upload.activity.AlbumActivity" />
+        <activity android:name="com.magic.upload.activity.GalleryActivity" />
+        <activity android:name="com.magic.upload.activity.ImageFile" />
+        <activity android:name="com.magic.upload.activity.ShowAllPhoto" />
+        <!-- 理光相机相关 -->
+        <activity
+            android:name="com.theta360.sample.v2.ImageListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.theta360.sample.v2.GLPhotoActivity"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>
