@@ -4,6 +4,9 @@ import com.magic.widget.FileBrowser;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 import com.magic.adapter.AlbumAdapter;
 import com.magic.demo_camera.LoginActivity;
 import com.magic.demo_camera.R;
+import com.magic.demo_camera.WaitUploadActivity;
 import com.magic.upload.util.AlbumHelper;
 import com.magic.upload.util.ImageBucket;
 import java.io.BufferedReader;
@@ -106,13 +110,14 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 						InputStreamReader isr = new InputStreamReader(is, "utf-8");
 						BufferedReader br = new BufferedReader(isr);
 						String result = br.readLine();
-
-//						Toast.makeText(this, result, Toast.LENGTH_LONG).show();
 						dos.close();
 						is.close();
 					}catch(Exception e){
-						
 					}
+					progressDialog.dismiss();
+					Looper.prepare();
+					Toast.makeText(getActivity(), getActivity().getString(R.string.progress_ok), Toast.LENGTH_LONG).show();
+					Looper.loop();
 				}
 			});
 			Log.e("上传进度条","开始创建");
@@ -133,16 +138,14 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 			// 设置ProgressDialog 是否可以按退回按键取消
 			progressDialog.setCancelable(true);
 			// 显示
-			Log.e("上传进度条","开始显示");
 			progressDialog.show();
-			Log.e("上传进度条","显示完成");
 			t.start();
 		}
 		catch (Exception e)
 		{
 //			setTitle(e.getMessage());
 		}
-		progressDialog.dismiss();
+
 	}
 
 }

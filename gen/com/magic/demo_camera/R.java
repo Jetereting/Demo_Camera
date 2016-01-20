@@ -927,6 +927,9 @@ containing a value of this type.
         public static final int only_choose_num=0x7f070007;
         public static final int photo=0x7f07000a;
         public static final int preview=0x7f07000c;
+        /**  进度条完成 
+         */
+        public static final int progress_ok=0x7f070020;
         public static final int rotate_inertia=0x7f070017;
         public static final int tab_text_buy=0x7f070005;
         public static final int tab_text_class=0x7f070004;

@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
@@ -41,6 +43,8 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
 	String selectPath="";
 	String telephone="";
 	String type;
+	
+	ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +76,28 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
 		findViewById(R.id.bt_upload).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            	progressDialog = new ProgressDialog(
+    					WaitUploadActivity.this);
+    			// 设置进度条风格，风格为圆形，旋转的
+    			progressDialog
+    					.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    			// 设置ProgressDialog 标题
+    			// progressDialog.setTitle("进度对话框");
+    			// 设置ProgressDialog 提示信息
+    			progressDialog.setMessage("正在上传图片...");
+    			// 设置ProgressDialog 标题图标
+    			// progressDialog.setIcon(android.R.drawable.ic_dialog_map);
+
+    			// 设置ProgressDialog 的进度条是否不明确
+    			progressDialog.setIndeterminate(false);
+    			// 设置ProgressDialog 是否可以按退回按键取消
+    			progressDialog.setCancelable(true);
+    			// 显示
+    			progressDialog.show();
             	new Thread(runnableOfUpload).start();
-            	Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
             	startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            	Toast.makeText(getApplicationContext(),
+						"上传完成！" , Toast.LENGTH_SHORT).show();
             }
         });
 //		列表选择
@@ -246,7 +269,10 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
 				Toast.makeText(getApplicationContext(),
 						"获取数据失败:" + e.toString(), Toast.LENGTH_SHORT).show();
 			}
-//			progressDialog.dismiss();
+			progressDialog.dismiss();
+//			Looper.prepare();
+//			Toast.makeText(WaitUploadActivity.this, WaitUploadActivity.this.getString(R.string.progress_ok), Toast.LENGTH_LONG).show();
+//			Looper.loop();
 		};
 	};
 

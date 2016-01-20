@@ -40,5 +40,7 @@
     <string name="label_btn_image_size">图像大小</string>
     <string name="image_size_2048x1024">2048 x 1024</string>
     <string name="image_size_5376x2688">5376 x 2688</string>
+    <!-- 进度条完成 -->
+    <string name="progress_ok">上传完成！</string>
 
 </resources>
