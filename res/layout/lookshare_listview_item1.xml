@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="622px"
+        android:layout_width="422px"
         android:layout_height="140px"
         android:background="@null"
         app:layout_marginLeftPercent="1%"/>

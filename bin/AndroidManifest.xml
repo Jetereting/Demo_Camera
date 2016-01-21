@@ -40,6 +40,7 @@
         <activity android:name="com.magic.demo_camera.LookShareActivity" />
         <activity android:name="com.magic.demo_camera.ShowShareActivity" />
         <activity android:name="com.magic.demo_camera.ShowAlbumItemPhoto" />
+        <activity android:name="com.magic.demo_camera.ShowMapActivity" />
         <!-- 上传图片 Activity相关 -->
 
         <activity android:name="com.magic.upload.activity.AlbumActivity" />

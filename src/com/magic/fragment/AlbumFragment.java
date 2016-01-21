@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.magic.adapter.AlbumAdapter;
 import com.magic.demo_camera.LoginActivity;
 import com.magic.demo_camera.R;
+import com.magic.demo_camera.ShowMapActivity;
 import com.magic.demo_camera.WaitUploadActivity;
 import com.magic.upload.util.AlbumHelper;
 import com.magic.upload.util.ImageBucket;
@@ -29,6 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import com.magic.widget.OnFileBrowserListener;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 public class AlbumFragment extends Fragment implements OnFileBrowserListener{
@@ -38,7 +40,7 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 	private AlbumHelper helper;
 	public static List<ImageBucket> contentList;
 	ProgressDialog progressDialog;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -120,7 +122,6 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 					Looper.loop();
 				}
 			});
-			Log.e("上传进度条","开始创建");
 			progressDialog = new ProgressDialog(
 					getActivity());
 			// 设置进度条风格，风格为圆形，旋转的
@@ -145,7 +146,7 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 		{
 //			setTitle(e.getMessage());
 		}
-
+		startActivity(new Intent(getActivity(),ShowMapActivity.class));
 	}
 
 }

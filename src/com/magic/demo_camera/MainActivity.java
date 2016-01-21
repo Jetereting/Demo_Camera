@@ -50,6 +50,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		initView();
 		initTab();
+		switch(getIntent().getIntExtra("page",0)){
+		case 1:tabSelect(1);break;
+		case 2:tabSelect(2);break;
+		case 3:tabSelect(3);break;
+		}
 	}
 
 	/**

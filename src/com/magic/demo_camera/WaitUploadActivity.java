@@ -87,7 +87,6 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
     			progressDialog.setMessage("正在上传图片...");
     			// 设置ProgressDialog 标题图标
     			// progressDialog.setIcon(android.R.drawable.ic_dialog_map);
-
     			// 设置ProgressDialog 的进度条是否不明确
     			progressDialog.setIndeterminate(false);
     			// 设置ProgressDialog 是否可以按退回按键取消
@@ -220,10 +219,12 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
 				JSONObject jsonP = new JSONObject();
 				jsonP.put("telephone", telephone);
 				jsonP.put("photo", selectPath);
-				jsonP.put("type", 1);
+				if (type.equals("trip_upload")) {
+					jsonP.put("type", 1);
+				} else {
+					jsonP.put("type", 2);
+				}
 				jsonO.put("queryParameters", jsonP);
-				
-				Log.e("path aaaaaaa:",selectPath);
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(),
 						"获取数据失败:" + e.toString(), Toast.LENGTH_SHORT).show();

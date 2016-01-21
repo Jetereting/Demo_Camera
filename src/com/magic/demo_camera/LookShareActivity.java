@@ -2,7 +2,9 @@ package com.magic.demo_camera;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -29,9 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.magic.adapter.LookShareAdpter;
-import com.magic.adapter.WaitUploadAdapter;
-import com.magic.adapter.WaitUploadAdapter.ViewHolder;
-import com.magic.model.LookShareModel;
+import com.magic.adapter.LookShareAdpter.Callback;
+import com.magic.fragment.AlbumFragment;
 import com.magic.model.WaitUploadModel;
 import com.magic.utils.CombineBitmap;
 import com.magic.utils.Config;
@@ -43,8 +44,7 @@ import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-public class LookShareActivity extends Activity implements OnItemClickListener,
-		OnItemLongClickListener {
+public class LookShareActivity extends Activity implements Callback {
 
 	Button btn_title_back;
 	TextView tev_title_content;
@@ -89,17 +89,17 @@ public class LookShareActivity extends Activity implements OnItemClickListener,
 		
 		iwxapi=WXAPIFactory.createWXAPI(this, APPID);
 		initView();
-	
-	    mAdapter = new LookShareAdpter(this, list);
-	            
-	    listView.setAdapter(mAdapter);
-//		列表选择
-		listView.setOnItemClickListener(this);
 		
 		type = getIntent().getStringExtra("type");
 		if (type.equals("trip_share")) {
+		    mAdapter = new LookShareAdpter(this, list,1,this);
+		    listView.setAdapter(mAdapter);
+//			列表选择
 			tev_title_content.setText("旅游分享");
 		} else {
+		    mAdapter = new LookShareAdpter(this, list,2,this);
+		    listView.setAdapter(mAdapter);
+//			列表选择
 			tev_title_content.setText("房产分享");
 		}
 		progressDialog = new ProgressDialog(
@@ -127,9 +127,6 @@ public class LookShareActivity extends Activity implements OnItemClickListener,
 
 	private void initView() {
 		listView = (ListView) findViewById(R.id.listview_lookshare);
-		listView.setOnItemClickListener(this);
-		listView.setOnItemLongClickListener(this);
-
 		btn_title_back = (Button) findViewById(R.id.btn_title_back);
 		tev_title_content = (TextView) findViewById(R.id.tev_title_content);
 		tev_title_content.setText("查看分享");
@@ -142,21 +139,6 @@ public class LookShareActivity extends Activity implements OnItemClickListener,
 
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		Intent intent=new Intent();
-		intent.putExtra("url", urlList[position]);
-		intent.setClass(getApplicationContext(), ShowShareActivity.class);
-		startActivity(intent);
-	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
-		// 分享
-		showDialog(this,mAdapter.getItem(arg2));
-		return false;
-	}
 
 	public void showDialog(Context context, final Object object) {
 		LayoutInflater inflater = LayoutInflater.from(context);
@@ -272,9 +254,6 @@ public class LookShareActivity extends Activity implements OnItemClickListener,
 					path = j.getString("path");
 					String url11 = j.getString("url");
 					urlList=url11.split(";");
-					Log.e("url",urlList+"");
-					
-//					Log.i("userid", "我是获取图片....url" + url +"path"+ path);
 					url = path.split(";");
 					for(int i=0;i<url.length;i++){
 						String photoPath[]=url[i].split(",");
@@ -305,5 +284,25 @@ public class LookShareActivity extends Activity implements OnItemClickListener,
 			progressDialog.dismiss();
 		};
 	};
+
+
+	@Override
+	public void click(View v) {
+		switch(v.getId()){
+		case R.id.button:
+			Intent intent=new Intent();
+			intent.putExtra("url", urlList[(Integer) v.getTag()]);
+			intent.setClass(getApplicationContext(), ShowShareActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.button1:
+			Intent intent1=new Intent();
+			intent1.putExtra("page",1);
+			intent1.setClass(getApplicationContext(), MainActivity.class);
+			startActivity(intent1);
+		}
+		
+	}
+	
 
 }
