@@ -119,6 +119,7 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 					progressDialog.dismiss();
 					Looper.prepare();
 					Toast.makeText(getActivity(), getActivity().getString(R.string.progress_ok), Toast.LENGTH_LONG).show();
+					getActivity().startActivity(new Intent(getActivity(),ShowMapActivity.class));
 					Looper.loop();
 				}
 			});
@@ -146,7 +147,7 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 		{
 //			setTitle(e.getMessage());
 		}
-		startActivity(new Intent(getActivity(),ShowMapActivity.class));
+
 	}
 
 }
