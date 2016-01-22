@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="libs/org.apache.commons.httpclient.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-4.3.2.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.3.5.jar"/>
+	<classpathentry kind="lib" path="libs/picasso-2.5.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

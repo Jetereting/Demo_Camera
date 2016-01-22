@@ -156,8 +156,6 @@ public class LookShareActivity extends Activity implements Callback {
 			@Override
 			public void onClick(View arg0) {
 				dialog.dismiss();
-				//分享到微信朋友圈
-				shareToWX("http://www.baidu.com");
 			}
 		});
 
@@ -179,25 +177,7 @@ public class LookShareActivity extends Activity implements Callback {
 		});
 	}
 	
-	private void shareToWX(String url){
-		//用于封装要发送的url
-		WXWebpageObject wxWebpageObject=new WXWebpageObject();
-		wxWebpageObject.webpageUrl=url;
-		//创建一个描述对象 用于android端向微信发送消息
-		WXMediaMessage wxMediaMessage=new WXMediaMessage(wxWebpageObject);
-		wxMediaMessage.title="title";
-		wxMediaMessage.description="desc";
-		//设置缩略图
-		Bitmap bitmap=BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-		wxMediaMessage.thumbData=bitmap.getNinePatchChunk();
-		//创建发送对像
-		SendMessageToWX.Req req=new SendMessageToWX.Req();
-		//设置标识
-		req.transaction=(System.currentTimeMillis()+"webpage");
-		req.message=wxMediaMessage;
-		req.scene=SendMessageToWX.Req.WXSceneTimeline;
-	    iwxapi.sendReq(req);
-	}
+	
 	Runnable runnable = new Runnable() {
 
 		@Override
