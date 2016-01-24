@@ -161,18 +161,6 @@ public class MyFragment extends Fragment {
 				Log.i("login_requst", "我是修改密码返回状态。。。" + status);
 				if (status == 1) {
 					Log.i("login_requst", "我是修改密码返回状态1kaishi");
-//					JSONObject j = getjson.getJSONObject("dataList");
-//					Log.i("userid", "我是修改密码成功" + j.toString());
-//					String telephone = j.getString("telephone");
-//					int vid = j.getInt("vid");
-//					SharedPreferences userinfo = getActivity()
-//							.getSharedPreferences("userinfo",
-//									Context.MODE_PRIVATE);
-//					Editor editor = userinfo.edit();
-//					editor.putString("telephone", telephone);
-//					editor.putInt("vid", vid);
-//					Log.i("userid", "我是修改密码ID...." + vid + telephone);
-//					editor.commit();
 					String comment = getjson.getString("comment");
 					Toast.makeText(getActivity(), comment,
 							Toast.LENGTH_LONG).show();

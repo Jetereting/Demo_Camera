@@ -1,26 +1,5 @@
-package com.magic.fragment;
-import java.util.List;
-import com.magic.widget.FileBrowser;
-import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.Toast;
+package com.magic.demo_camera;
 
-import com.magic.adapter.AlbumAdapter;
-import com.magic.demo_camera.LoginActivity;
-import com.magic.demo_camera.R;
-import com.magic.demo_camera.ShowMapActivity;
-import com.magic.demo_camera.WaitUploadActivity;
-import com.magic.upload.util.AlbumHelper;
-import com.magic.upload.util.ImageBucket;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -28,13 +7,31 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import com.magic.widget.OnFileBrowserListener;
+import java.util.List;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.GridView;
+import android.widget.Toast;
 
-public class AlbumFragment extends Fragment implements OnFileBrowserListener{
+import com.magic.adapter.AlbumAdapter;
+import com.magic.upload.util.AlbumHelper;
+import com.magic.upload.util.ImageBucket;
+import com.magic.widget.FileBrowser;
+import com.magic.widget.OnFileBrowserListener;
 
+public class UploadMapActivity extends Activity implements
+OnFileBrowserListener {
 	private AlbumAdapter folderAdapter;
 	GridView gridView;
 	private AlbumHelper helper;
@@ -43,22 +40,22 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 	String uploadUrl;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.main, container, false);
-
-		FileBrowser fileBrowser = (FileBrowser) view.findViewById(R.id.filebrowser);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.main);
+		FileBrowser fileBrowser = (FileBrowser)findViewById(R.id.filebrowser);
+		findViewById(R.id.tev_app_title).setVisibility(View.VISIBLE);
 		fileBrowser.setOnFileBrowserListener(this);
-
-		return view;
 	}
 
 	public void onDirItemClick(String path){}
 
 	public void onFileItemClick(final String filename)
 	{
-		uploadUrl = "http://120.24.249.33/uploadfile/FileUploadServlet";
-		Log.e("图片上传","相册图片上传");
+		String para=getIntent().getStringExtra("para");
+		uploadUrl = "http://120.24.249.33/uploadfile/FileUploadServlet2?path="+para;
+		Log.e("图片上传","户型图上传"+para);
 		final String end = "\r\n";
 		final String twoHyphens = "--";		// 两个连字符
 		final String boundary = "******";		// 分界符的字符串
@@ -100,7 +97,7 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 							dos.write(buffer, 0, count);
 						}
 						fis.close();
-						SharedPreferences userinfo = getActivity()
+						SharedPreferences userinfo = UploadMapActivity.this
 								.getSharedPreferences("userinfo",
 										Context.MODE_PRIVATE);
 
@@ -119,13 +116,13 @@ public class AlbumFragment extends Fragment implements OnFileBrowserListener{
 					}
 					progressDialog.dismiss();
 					Looper.prepare();
-					Toast.makeText(getActivity(), getActivity().getString(R.string.progress_ok), Toast.LENGTH_LONG).show();
-					getActivity().startActivity(new Intent(getActivity(),ShowMapActivity.class));
+					Toast.makeText(UploadMapActivity.this, UploadMapActivity.this.getString(R.string.progress_ok), Toast.LENGTH_LONG).show();
+					UploadMapActivity.this.startActivity(new Intent(UploadMapActivity.this,ShowMapActivity.class));
 					Looper.loop();
 				}
 			});
 			progressDialog = new ProgressDialog(
-					getActivity());
+					UploadMapActivity.this);
 			// 设置进度条风格，风格为圆形，旋转的
 			progressDialog
 			.setProgressStyle(ProgressDialog.STYLE_SPINNER);

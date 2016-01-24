@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:mobile="http://mobile.blogjava.net" android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="@color/white">
+    xmlns:mobile="http://mobile.blogjava.net" android:orientation="vertical"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:background="@color/white">
+    <TextView
+        android:id="@+id/tev_app_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/app_title_bg"
+        android:gravity="center"
+        android:text="点击图片上传户型图"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
-	<com.magic.widget.FileBrowser
-		android:id="@+id/filebrowser" android:layout_width="fill_parent"
-		android:background="@color/white"
-		android:layout_height="fill_parent" mobile:folderImage="@drawable/folder"
-		mobile:otherFileImage="@drawable/other" />
+    <com.magic.widget.FileBrowser
+        android:id="@+id/filebrowser" android:layout_width="fill_parent"
+        android:background="@color/white"
+        android:layout_height="fill_parent" mobile:folderImage="@drawable/folder"
+        mobile:otherFileImage="@drawable/other" />
 </LinearLayout>

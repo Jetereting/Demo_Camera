@@ -58,8 +58,9 @@ public class LookShareActivity extends Activity implements Callback {
 	String telephone="";
 	int photoID=0;
 	String[] url;
+	ArrayList<Integer> num  = new ArrayList<Integer>();
 	String urlList[];
-	
+	String paraList[];
 	ProgressDialog progressDialog;
 
 	// 对话框 文本
@@ -234,9 +235,15 @@ public class LookShareActivity extends Activity implements Callback {
 					path = j.getString("path");
 					String url11 = j.getString("url");
 					urlList=url11.split(";");
+					
+					
+					String para = j.getString("para");
+					paraList=para.split(";");
+					
 					url = path.split(";");
 					for(int i=0;i<url.length;i++){
 						String photoPath[]=url[i].split(",");
+						num.add(i,photoPath.length);
 						Bitmap bitmap = null,bitmap1 = null,bitmapWrite=null;
 						bitmapWrite =((BitmapDrawable)getResources().getDrawable(R.drawable.write)).getBitmap();
 						for(int j1=0;j1<photoPath.length;j1++){
@@ -269,18 +276,31 @@ public class LookShareActivity extends Activity implements Callback {
 	@Override
 	public void click(View v) {
 		switch(v.getId()){
+//		查看分享
 		case R.id.button:
 			Intent intent=new Intent();
 			intent.putExtra("url", urlList[(Integer) v.getTag()]);
 			intent.setClass(getApplicationContext(), ShowShareActivity.class);
 			startActivity(intent);
 			break;
+//			上传户型图
 		case R.id.button1:
 			Intent intent1=new Intent();
-			intent1.putExtra("page",1);
-			intent1.setClass(getApplicationContext(), MainActivity.class);
+			intent1.putExtra("para", paraList[(Integer) v.getTag()]);
+			intent1.setClass(getApplicationContext(), UploadMapActivity.class);
 			startActivity(intent1);
+//			户型图定位
+		case R.id.button2:
+			Intent intent2=new Intent();
+			String str[]=paraList[(Integer) v.getTag()].split("_");
+			String url="http://120.24.249.33/uploadfile/ImagesUploaded/"+str[0]+"_3/"+str[1]+"/vtour/vr-go/1.jpg";
+			intent2.putExtra("url",url);
+			intent2.putExtra("num",num.get((Integer) v.getTag())+"");
+			intent2.putExtra("para", paraList[(Integer) v.getTag()]);
+			intent2.setClass(getApplicationContext(), ShowMapActivity.class);
+			startActivity(intent2);
 		}
+		
 		
 	}
 	

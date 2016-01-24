@@ -16,19 +16,19 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="100px"
         android:layout_height="wrap_content"
         android:layout_marginTop="22px"
         android:layout_marginBottom="22px"
         android:layout_marginRight="7px"
         android:gravity="center|center_horizontal"
-        app:layout_marginLeftPercent="80%"
+        app:layout_marginLeftPercent="85%"
         android:background="@drawable/btn_login_p"
         android:text="查看分享"
         android:textSize="27px"/>
     <Button
         android:id="@+id/button1"
-        android:layout_width="wrap_content"
+        android:layout_width="100px"
         android:layout_height="wrap_content"
         android:layout_marginTop="22px"
         android:layout_marginBottom="22px"
@@ -37,6 +37,18 @@
         app:layout_marginLeftPercent="55.7%"
         android:background="@drawable/btn_login_p"
         android:text="上传户型图"
+        android:textSize="27px"/>
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="100px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22px"
+        android:layout_marginBottom="22px"
+        android:layout_marginRight="7px"
+        android:gravity="center|center_horizontal"
+        app:layout_marginLeftPercent="70.5%"
+        android:background="@drawable/btn_login_p"
+        android:text="户型图定位"
         android:textSize="27px"/>
     <View
         android:layout_width="match_parent"

@@ -37,12 +37,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Fragment[] fragments;
 	// fragment界面
 	private Fragment fragment_edit, fragment_album, fragment_camera,
-			fragment_my;
+	fragment_my;
 	// 当前tab下标
 	private int currentTabIndex;
 
 	private TextView tev_title_content;
 	TextView tv_user;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,13 +68,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		tabs[1] = (Button) findViewById(R.id.btn_main_tab_album);
 		tabs[2] = (Button) findViewById(R.id.btn_main_tab_camera);
 		tabs[3] = (Button) findViewById(R.id.btn_main_tab_my);
-		
+
 		SharedPreferences userinfo = MainActivity.this
 				.getSharedPreferences("userinfo",
 						Context.MODE_PRIVATE);
 		tv_user=(TextView)findViewById(R.id.tv_user);
 		tv_user.setText(userinfo.getString("telephone", "")+"\t");
-		
+
 		// 把第一个tab设为选中状态
 		tabs[0].setSelected(true);
 		tabs[0].setOnClickListener(this);
@@ -94,7 +95,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				fragment_camera, fragment_my };
 		// 添加显示第一个fragment
 		getFragmentManager().beginTransaction()
-				.add(R.id.fragment_container, fragment_edit).commit();
+		.add(R.id.fragment_container, fragment_edit).commit();
+
 	}
 
 	/**
@@ -139,29 +141,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		 if (keyCode == KeyEvent.KEYCODE_BACK) {
-//	            new AlertDialog.Builder(this).setTitle("确认退出吗？")
-//	                    .setIcon(android.R.drawable.ic_dialog_info)
-//	                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
-//
-//	                        @Override
-//	                        public void onClick(DialogInterface dialog, int which) {
-//	                            // 点击“确认”后的操作
-	                            Intent home = new Intent(Intent.ACTION_MAIN);
-	                            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	                            home.addCategory(Intent.CATEGORY_HOME);
-	                            startActivity(home);
-//	                        }
-//	                    })
-//	                    .setNegativeButton("返回", new DialogInterface.OnClickListener() {
-//	                        @Override
-//	                        public void onClick(DialogInterface dialog, int which) {
-//	                            // 点击“返回”后的操作,这里不设置没有任何操作
-//	                        }
-//	                    }).show();
-//	        }
-	        return true;
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Intent home = new Intent(Intent.ACTION_MAIN);
+		home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		home.addCategory(Intent.CATEGORY_HOME);
+		startActivity(home);
+		return true;
 	}
 
 }

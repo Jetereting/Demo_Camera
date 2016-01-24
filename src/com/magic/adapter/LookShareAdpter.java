@@ -61,6 +61,7 @@ public class LookShareAdpter extends BaseAdapter implements OnClickListener{
 		if (view==null) {
 			// 获得ViewHolder对象
 			holder = new ViewHolder();
+//			旅游分享
 			if(type==1){
 				view=LayoutInflater.from(context).inflate(R.layout.lookshare_listview_item, null);
 			}else{
@@ -69,6 +70,7 @@ public class LookShareAdpter extends BaseAdapter implements OnClickListener{
 			holder.imageView=(ImageView)view.findViewById(R.id.imageView);
 			holder.button=(Button)view.findViewById(R.id.button);
 			holder.button1=(Button)view.findViewById(R.id.button1);
+			holder.button2=(Button)view.findViewById(R.id.button2);
 			// 为view设置标签
 			view.setTag(holder);
 		}else{
@@ -80,8 +82,11 @@ public class LookShareAdpter extends BaseAdapter implements OnClickListener{
 		holder.button.setTag(position);
 		holder.button1.setOnClickListener(this);
 		holder.button1.setTag(position);
+		holder.button2.setOnClickListener(this);
+		holder.button2.setTag(position);
 		if(type==1){
 			holder.button1.setVisibility(View.GONE);
+			holder.button2.setVisibility(View.GONE);
 		}
 		return view;
 	}
@@ -89,6 +94,7 @@ public class LookShareAdpter extends BaseAdapter implements OnClickListener{
 		public ImageView imageView;
 		public Button button;
 		public Button button1;
+		public Button button2;
 	}
 	@Override
 	public void onClick(View v) {
