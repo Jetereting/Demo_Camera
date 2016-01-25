@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
 	EditText edt_username, edt_passwd;
 	Button btn_login;
 	TextView tev_register;
-	
+
 	ProgressDialog progressDialog;
 	String telephone="";
 
@@ -56,14 +56,14 @@ public class LoginActivity extends Activity {
 		if(!f.exists()){
 			f.mkdirs();
 		}
-		
+
 	}
 
 	private void haveUser() {
 		SharedPreferences userinfo = LoginActivity.this
 				.getSharedPreferences("userinfo",
 						Context.MODE_PRIVATE);
-		
+
 		if(userinfo.getString("telephone", "")!=""){
 			startActivity(new Intent(LoginActivity.this,
 					MainActivity.class));
@@ -75,20 +75,20 @@ public class LoginActivity extends Activity {
 		edt_passwd = (EditText) findViewById(R.id.edt_login_password);
 		btn_login = (Button) findViewById(R.id.btn_login);
 		tev_register = (TextView) findViewById(R.id.tev_register);
-		
+
 		btn_login.setOnClickListener(new View.OnClickListener() {
-		
+
 			@Override
 			public void onClick(View arg0) {
 				if (edt_username.getText().length() != 0) {
 					if (edt_passwd.getText().length() != 0) {
 						if (IsNetwork.isNetwork(LoginActivity.this)) {
-//						if(1==1){
+							//						if(1==1){
 							progressDialog = new ProgressDialog(
 									LoginActivity.this);
 							// 设置进度条风格，风格为圆形，旋转的
 							progressDialog
-									.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+							.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 							// 设置ProgressDialog 标题
 							// progressDialog.setTitle("进度对话框");
 							// 设置ProgressDialog 提示信息
@@ -145,8 +145,8 @@ public class LoginActivity extends Activity {
 				jsonP.put("loginName", u_name);
 				jsonP.put("password", u_pass);
 				jsonO.put("queryParameters", jsonP);
-				
-//				Log.e("userJson:",jsonO.toString());
+
+				//				Log.e("userJson:",jsonO.toString());
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(),
 						"获取数据失败:" + e.toString(), Toast.LENGTH_SHORT).show();
@@ -206,28 +206,13 @@ public class LoginActivity extends Activity {
 		};
 	};
 	@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-		 if (keyCode == KeyEvent.KEYCODE_BACK) {
-//	            new AlertDialog.Builder(this).setTitle("确认退出吗？")
-//	                    .setIcon(android.R.drawable.ic_dialog_info)
-//	                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
-//
-//	                        @Override
-//	                        public void onClick(DialogInterface dialog, int which) {
-//	                            // 点击“确认”后的操作
-	                            Intent home = new Intent(Intent.ACTION_MAIN);
-	                            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	                            home.addCategory(Intent.CATEGORY_HOME);
-	                            startActivity(home);
-//	                        }
-//	                    })
-//	                    .setNegativeButton("返回", new DialogInterface.OnClickListener() {
-//	                        @Override
-//	                        public void onClick(DialogInterface dialog, int which) {
-//	                            // 点击“返回”后的操作,这里不设置没有任何操作
-//	                        }
-//	                    }).show();
-	        }
-	        return true;
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent home = new Intent(Intent.ACTION_MAIN);
+			home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			home.addCategory(Intent.CATEGORY_HOME);
+			startActivity(home);
+		}
+		return true;
 	}
 }

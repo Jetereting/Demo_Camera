@@ -24,6 +24,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="房间2  x 坐标:       y坐标："/>
+        <RadioButton
+            android:id="@+id/rb_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="房间3  x 坐标:       y坐标："/>
+        <RadioButton
+            android:id="@+id/rb_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="房间4  x 坐标:       y坐标："/>
+        <RadioButton
+            android:id="@+id/rb_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="房间5  x 坐标:       y坐标："/>
     </RadioGroup>
     <Button
         android:id="@+id/bt_result"

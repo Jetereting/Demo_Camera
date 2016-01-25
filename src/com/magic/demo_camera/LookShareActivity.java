@@ -92,6 +92,7 @@ public class LookShareActivity extends Activity implements Callback {
 		initView();
 		
 		type = getIntent().getStringExtra("type");
+		
 		if (type.equals("trip_share")) {
 		    mAdapter = new LookShareAdpter(this, list,1,this);
 		    listView.setAdapter(mAdapter);
@@ -289,6 +290,7 @@ public class LookShareActivity extends Activity implements Callback {
 			intent1.putExtra("para", paraList[(Integer) v.getTag()]);
 			intent1.setClass(getApplicationContext(), UploadMapActivity.class);
 			startActivity(intent1);
+			break;
 //			户型图定位
 		case R.id.button2:
 			Intent intent2=new Intent();
@@ -299,6 +301,7 @@ public class LookShareActivity extends Activity implements Callback {
 			intent2.putExtra("para", paraList[(Integer) v.getTag()]);
 			intent2.setClass(getApplicationContext(), ShowMapActivity.class);
 			startActivity(intent2);
+			break;
 		}
 		
 		
