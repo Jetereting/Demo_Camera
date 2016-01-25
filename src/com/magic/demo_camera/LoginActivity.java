@@ -1,6 +1,7 @@
 package com.magic.demo_camera;
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 
@@ -16,7 +17,9 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,20 +29,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+
 import com.magic.utils.Config;
 import com.magic.utils.Http;
 import com.magic.utils.IsNetwork;
+import com.magic.utils.TimeCount;
 
 @SuppressLint("HandlerLeak") 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity{
 
 	EditText edt_username, edt_passwd;
-	Button btn_login;
+	Button btn_login,bt_check_code,bt_weibo,bt_weixin;
 	TextView tev_register;
 
 	ProgressDialog progressDialog;
 	String telephone="";
+	TimeCount time;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,6 +62,17 @@ public class LoginActivity extends Activity {
 		mkMyDris();
 		haveUser();
 		initView();
+		event();
+	}
+
+
+	private void event() {
+		bt_check_code.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				time.start();
+			}
+		});
 	}
 
 	private void mkMyDris() {
@@ -75,7 +100,10 @@ public class LoginActivity extends Activity {
 		edt_passwd = (EditText) findViewById(R.id.edt_login_password);
 		btn_login = (Button) findViewById(R.id.btn_login);
 		tev_register = (TextView) findViewById(R.id.tev_register);
-
+		bt_check_code=(Button)findViewById(R.id.bt_check_code);
+		bt_weibo=(Button)findViewById(R.id.bt_weibo);
+		bt_weixin=(Button)findViewById(R.id.bt_weixin);
+		time=new TimeCount(30000,1000,bt_check_code);
 		btn_login.setOnClickListener(new View.OnClickListener() {
 
 			@Override

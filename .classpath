@@ -12,5 +12,10 @@
 	<classpathentry kind="lib" path="libs/httpcore-4.3.2.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.3.5.jar"/>
 	<classpathentry kind="lib" path="libs/picasso-2.5.2.jar"/>
+	<classpathentry kind="lib" path="libs/ShareSDK-Core-2.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/ShareSDK-SinaWeibo-2.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/ShareSDK-Wechat-2.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/ShareSDK-Wechat-Core-2.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/SMSSDK-1.1.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

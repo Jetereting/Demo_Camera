@@ -33,6 +33,7 @@
         android:background="@null" />
     <!-- 获取动态验证码按钮-->
     <Button
+        android:id="@+id/bt_check_code"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_widthPercent="25%"
@@ -60,6 +61,7 @@
 
     <!-- 微博登录-->
     <Button
+        android:id="@+id/bt_weibo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_widthPercent="10%"
@@ -70,6 +72,7 @@
 
     <!-- 微信登录-->
     <Button
+        android:id="@+id/bt_weixin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_widthPercent="10%"
