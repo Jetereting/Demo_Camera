@@ -1,8 +1,6 @@
 package com.theta360.sample.v2;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,7 +25,6 @@ import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,9 +47,7 @@ import com.magic.upload.util.FileUtils;
 import com.theta360.sample.v2.model.ImageSize;
 import com.theta360.sample.v2.network.DeviceInfo;
 import com.theta360.sample.v2.network.HttpConnector;
-import com.theta360.sample.v2.network.HttpDownloadListener;
 import com.theta360.sample.v2.network.HttpEventListener;
-import com.theta360.sample.v2.network.ImageData;
 import com.theta360.sample.v2.network.ImageInfo;
 import com.theta360.sample.v2.network.StorageInfo;
 import com.theta360.sample.v2.view.ImageListArrayAdapter;
@@ -69,59 +64,53 @@ import com.theta360.sample.v2.view.MJpegView;
  */
 @SuppressLint("NewApi") 
 public class ImageListActivity extends Activity implements ImageSizeDialog.DialogBtnListener {
-	private ListView objectList;
-	private LogView logViewer;
 	private String cameraIpAddress;
 
-	private LinearLayout layoutCameraArea;
 	private Button btnShoot;
-	private TextView textCameraStatus;
-//	private Button btnImageSize;
 	private ImageSize currentImageSize;
-//	private MJpegView mMv;
+	private MJpegView mMv;
 	private boolean mConnectionSwitchEnabled = false;
 
 	private LoadObjectListTask sampleTask = null;
 	private ShowLiveViewTask livePreviewTask = null;
 	private GetImageSizeTask getImageSizeTask = null;
-	private long fileSize;
-	private long receivedDataSize = 0;
-    /**
-     * onCreate Method
-     * @param savedInstanceState onCreate Status value
-     */
+
+	/**
+	 * onCreate Method
+	 * @param savedInstanceState onCreate Status value
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ricoh_activity_object_list);
 
-		logViewer = (LogView) findViewById(R.id.log_view);
 		cameraIpAddress = getResources().getString(R.string.theta_ip_address);
-		getActionBar().setTitle("WIFI连接相机且切换ON打开");
-		
-		layoutCameraArea = (LinearLayout) findViewById(R.id.shoot_area);
-		textCameraStatus = (TextView) findViewById(R.id.camera_status);
+		getActionBar().setTitle(cameraIpAddress);
+
 		btnShoot = (Button) findViewById(R.id.btn_shoot);
+		btnShoot.setText("点击右上角切换至ON打开相机");
+		btnShoot.setEnabled(false);
 		btnShoot.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				btnShoot.setEnabled(false);
-				textCameraStatus.setText(R.string.text_camera_synthesizing);
-				//拍摄任务
-				new ShootTask().execute();
+				if("拍照".equals(btnShoot.getText().toString())){
+					btnShoot.setEnabled(false);
+					//拍摄任务
+					new ShootTask().execute();
+				}else if("上传".equals(btnShoot.getText().toString())){
+//					ImageRow selectedItem = (ImageRow) parent.getItemAtPosition(position);
+//					if (selectedItem.isPhoto()) {
+//						byte[] thumbnail = selectedItem.getThumbnail();
+//						String fileId = selectedItem.getFileId();
+//						GLPhotoActivity.startActivityForResult(ImageListActivity.this, cameraIpAddress, fileId, thumbnail, false);
+//					} else {
+//						Toast.makeText(getApplicationContext(), "This isn't a photo.", Toast.LENGTH_SHORT).show();
+//					}
+				}
 			}
 		});
 
-//		mMv = (MJpegView) findViewById(R.id.live_view);
-
-//		btnImageSize = (Button) findViewById(R.id.btn_image_size);
-//		btnImageSize.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				FragmentManager mgr = getFragmentManager();
-//				ImageSizeDialog.show(mgr, currentImageSize);
-//			}
-//		});
+		mMv = (MJpegView) findViewById(R.id.live_view);
 
 		forceConnectToWifi();
 	}
@@ -129,13 +118,13 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 	@Override
 	protected void onPause() {
 		super.onPause();
-//		mMv.stopPlay();
+		mMv.stopPlay();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		mMv.play();
+		mMv.play();
 
 		if (livePreviewTask != null) {
 			livePreviewTask.cancel(true);
@@ -174,9 +163,9 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 	/**
 	 * onCreateOptionsMenu Method
-     * @param menu Menu initialization object
-     * @return Menu display feasibility status value
-     */
+	 * @param menu Menu initialization object
+	 * @return Menu display feasibility status value
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -186,12 +175,10 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		connectionSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				objectList = (ListView) findViewById(R.id.object_list);
-				ImageListArrayAdapter empty = new ImageListArrayAdapter(ImageListActivity.this, R.layout.ricoh_listlayout_object, new ArrayList<ImageRow>());
-				objectList.setAdapter(empty);
 
 				if (isChecked) {
-					layoutCameraArea.setVisibility(View.VISIBLE);
+					btnShoot.setText("拍照");
+					btnShoot.setEnabled(true);
 
 					if (sampleTask == null) {
 						sampleTask = new LoadObjectListTask();
@@ -208,7 +195,8 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 						getImageSizeTask.execute();
 					}
 				} else {
-					layoutCameraArea.setVisibility(View.INVISIBLE);
+					btnShoot.setText("点击右上角切换至ON打开相机");
+					btnShoot.setEnabled(false);
 
 					if (sampleTask != null) {
 						sampleTask.cancel(true);
@@ -226,7 +214,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 					}
 
 					new DisConnectTask().execute();
-//					mMv.stopPlay();
+					mMv.stopPlay();
 				}
 			}
 		});
@@ -246,7 +234,6 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 	private void changeCameraStatus(final int resid) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				textCameraStatus.setText(resid);
 			}
 		});
 	}
@@ -254,7 +241,6 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 	private void appendLogView(final String log) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				logViewer.append(log);
 			}
 		});
 	}
@@ -268,7 +254,6 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 	private class ChangeImageSizeTask extends AsyncTask<ImageSize, String, Void> {
 		@Override
 		protected void onPreExecute() {
-//			btnImageSize.setEnabled(false);
 		}
 
 		@Override
@@ -283,26 +268,22 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-//			btnImageSize.setEnabled(true);
-			logViewer.append("完成！");
 		}
 	}
 
 	private class GetImageSizeTask extends AsyncTask<Void, String, ImageSize> {
 		@Override
 		protected void onPreExecute() {
-//			btnImageSize.setEnabled(false);
 		}
 
 		@Override
 		protected ImageSize doInBackground(Void... params) {
-			publishProgress("获得当前图片大小");
+			publishProgress("get current image size");
 			HttpConnector camera = new HttpConnector(cameraIpAddress);
 			ImageSize imageSize = camera.getImageSize();
 
@@ -312,18 +293,14 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 
 		@Override
 		protected void onPostExecute(ImageSize imageSize) {
 			if (imageSize != null) {
-				logViewer.append("新的图片大小: " + imageSize.name());
 				currentImageSize = imageSize;
-//				btnImageSize.setEnabled(true);
 			} else {
-				logViewer.append("获取图片大小失败");
 			}
 		}
 	}
@@ -337,7 +314,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 			for (int retryCount = 0; retryCount < MAX_RETRY_COUNT; retryCount++) {
 				try {
-					publishProgress("开始 Live view");
+					publishProgress("start Live view");
 					HttpConnector camera = new HttpConnector(ipAddress[0]);
 					InputStream is = camera.getLivePreview();
 					mjis = new MJpegInputStream(is);
@@ -363,43 +340,38 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 
 		@Override
 		protected void onPostExecute(MJpegInputStream mJpegInputStream) {
 			if (mJpegInputStream != null) {
-//				mMv.setSource(mJpegInputStream);
+				mMv.setSource(mJpegInputStream);
 			} else {
-				logViewer.append("启动 live view 失败");
 			}
 		}
 	}
 
 	private class LoadObjectListTask extends AsyncTask<Void, String, List<ImageRow>> {
 
-		private ProgressBar progressBar;
 
 		public LoadObjectListTask() {
-			progressBar = (ProgressBar) findViewById(R.id.loading_object_list_progress_bar);
 		}
 
 		@Override
 		protected void onPreExecute() {
-			progressBar.setVisibility(View.VISIBLE);
 		}
 
 		@Override
 		protected List<ImageRow> doInBackground(Void... params) {
 			try {
 				publishProgress("------");
-				publishProgress("正在连接 " + cameraIpAddress + "...");
+				publishProgress("connecting to " + cameraIpAddress + "...");
 				HttpConnector camera = new HttpConnector(cameraIpAddress);
 				changeCameraStatus(R.string.text_camera_standby);
 
 				DeviceInfo deviceInfo = camera.getDeviceInfo();
-				publishProgress("连接完成.");
+				publishProgress("connected.");
 				publishProgress(deviceInfo.getClass().getSimpleName() + ":<" + deviceInfo.getModel() + ", " + deviceInfo.getDeviceVersion() + ", " + deviceInfo.getSerialNumber() + ">");
 
 				List<ImageRow> imageRows = new ArrayList<ImageRow>();
@@ -410,7 +382,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 				int megaByte = 1024 * 1024;
 				long freeSpace = storage.getFreeSpaceInBytes() / megaByte;
 				long maxSpace = storage.getMaxCapacity() / megaByte;
-//				storageCapacity.setFileName("空余内存: " + freeSpaceInImages + "[shots] (" + freeSpace + "/" + maxSpace + "[MB])");
+				storageCapacity.setFileName("Free space: " + freeSpaceInImages + "[shots] (" + freeSpace + "/" + maxSpace + "[MB])");
 				imageRows.add(storageCapacity);
 
 				ArrayList<ImageInfo> objects = camera.getList();
@@ -423,8 +395,8 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 					imageRow.setFileSize(object.getFileSize());
 					imageRow.setFileName(object.getFileName());
 					imageRow.setCaptureDate(object.getCaptureDate());
-					publishProgress("<图像信息: File ID=" + object.getFileId() + ", 文件名=" + object.getFileName() + ", 捕获时间=" + object.getCaptureDate()
-							+ ", 图像宽度=" + object.getWidth() + ", 图像高度=" + object.getHeight() + ", object_format=" + object.getFileFormat()
+					publishProgress("<ImageInfo: File ID=" + object.getFileId() + ", filename=" + object.getFileName() + ", capture_date=" + object.getCaptureDate()
+							+ ", image_pix_width=" + object.getWidth() + ", image_pix_height=" + object.getHeight() + ", object_format=" + object.getFileFormat()
 							+ ">");
 
 					if (object.getFileFormat().equals(ImageInfo.FILE_FORMAT_CODE_EXIF_JPEG)) {
@@ -438,7 +410,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 						imageRow.setIsPhoto(false);
 					}
 					imageRows.add(imageRow);
-					publishProgress("获取列表: " + (i + 1) + "/" + objectSize);
+					publishProgress("getList: " + (i + 1) + "/" + objectSize);
 				}
 				return imageRows;
 
@@ -452,65 +424,24 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 
 		@Override
 		protected void onPostExecute(List<ImageRow> imageRows) {
 			if (imageRows != null) {
-				TextView storageInfo = (TextView) findViewById(R.id.storage_info);
 				String info = imageRows.get(0).getFileName();
 				imageRows.remove(0);
-				storageInfo.setText(info);
 
 				ImageListArrayAdapter imageListArrayAdapter = new ImageListArrayAdapter(ImageListActivity.this, R.layout.ricoh_listlayout_object, imageRows);
-				objectList.setAdapter(imageListArrayAdapter);
-				objectList.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						ImageRow selectedItem = (ImageRow) parent.getItemAtPosition(position);
-						if (selectedItem.isPhoto()) {
-							byte[] thumbnail = selectedItem.getThumbnail();
-							String fileId = selectedItem.getFileId();
-							GLPhotoActivity.startActivityForResult(ImageListActivity.this, cameraIpAddress, fileId, thumbnail, false);
-						} else {
-							Toast.makeText(getApplicationContext(), "This isn't a photo.", Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-				objectList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-					private String mFileId;
-					@Override
-					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-						ImageRow selectedItem = (ImageRow) parent.getItemAtPosition(position);
-						mFileId = selectedItem.getFileId();
-						String fileName = selectedItem.getFileName();
 
-						new AlertDialog.Builder(ImageListActivity.this)
-								.setTitle(fileName)
-								.setMessage(R.string.delete_dialog_message)
-								.setPositiveButton(R.string.dialog_positive_button, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										DeleteObjectTask deleteTask = new DeleteObjectTask();
-										deleteTask.execute(mFileId);
-									}
-								})
-								.show();
-						return true;
-					}
-				});
 			} else {
-				logViewer.append("failed to get image list");
 			}
 
-			progressBar.setVisibility(View.GONE);
 		}
 
 		@Override
 		protected void onCancelled() {
-			progressBar.setVisibility(View.GONE);
 		}
 
 	}
@@ -519,7 +450,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 		@Override
 		protected Void doInBackground(String... fileId) {
-			publishProgress("开始删除文件");
+			publishProgress("start delete file");
 			DeleteEventListener deleteListener = new DeleteEventListener();
 			HttpConnector camera = new HttpConnector(getResources().getString(R.string.theta_ip_address));
 			camera.deleteFile(fileId[0], deleteListener);
@@ -530,33 +461,31 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-			logViewer.append("done");
 		}
 
 		private class DeleteEventListener implements HttpEventListener {
 			@Override
 			public void onCheckStatus(boolean newStatus) {
 				if (newStatus) {
-					appendLogView("删除文件:完成");
+					appendLogView("deleteFile:FINISHED");
 				} else {
-					appendLogView("删除文件:进行中。。");
+					appendLogView("deleteFile:IN PROGRESS");
 				}
 			}
 
 			@Override
 			public void onObjectChanged(String latestCapturedFileId) {
-				appendLogView("删除 " + latestCapturedFileId);
+				appendLogView("delete " + latestCapturedFileId);
 			}
 
 			@Override
 			public void onCompleted() {
-				appendLogView("删除.");
+				appendLogView("deleted.");
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -567,7 +496,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 			@Override
 			public void onError(String errorMessage) {
-				appendLogView("删除错误 " + errorMessage);
+				appendLogView("delete error " + errorMessage);
 			}
 		}
 	}
@@ -577,7 +506,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		protected Boolean doInBackground(Void... params) {
 
 			try {
-				publishProgress("未连接.");
+				publishProgress("disconnected.");
 				return true;
 
 			} catch (Throwable throwable) {
@@ -590,7 +519,6 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 	}
@@ -599,7 +527,6 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 		@Override
 		protected void onPreExecute() {
-			logViewer.append("照相");
 		}
 
 		@Override
@@ -614,13 +541,10 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onPostExecute(HttpConnector.ShootResult result) {
 			if (result == HttpConnector.ShootResult.FAIL_CAMERA_DISCONNECTED) {
-				logViewer.append("照相:连接相机失败");
 			} else if (result == HttpConnector.ShootResult.FAIL_STORE_FULL) {
-				logViewer.append("照相:内存卡满了");
 			} else if (result == HttpConnector.ShootResult.FAIL_DEVICE_BUSY) {
-				logViewer.append("照相:机器繁忙");
 			} else if (result == HttpConnector.ShootResult.SUCCESS) {
-				logViewer.append("照相:成功");
+				Toast.makeText(getApplicationContext(), "拍照成功！", Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -631,9 +555,9 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 			@Override
 			public void onCheckStatus(boolean newStatus) {
 				if(newStatus) {
-					appendLogView("照相:完成");
+					appendLogView("takePicture:FINISHED");
 				} else {
-					appendLogView("照相:正在进行。。");
+					appendLogView("takePicture:IN PROGRESS");
 				}
 			}
 
@@ -641,32 +565,32 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 			public void onObjectChanged(String latestCapturedFileId) {
 				this.ImageAdd = true;
 				this.latestCapturedFileId = latestCapturedFileId;
-				appendLogView("添加图片:FileId " + this.latestCapturedFileId);
+				appendLogView("ImageAdd:FileId " + this.latestCapturedFileId);
 			}
 
 			@Override
 			public void onCompleted() {
-				appendLogView("捕捉完成");
+				appendLogView("CaptureComplete");
 				if (ImageAdd) {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							btnShoot.setEnabled(true);
-							textCameraStatus.setText(R.string.text_camera_standby);
 							new GetThumbnailTask(latestCapturedFileId).execute();
 						}
 					});
 				}
+				btnShoot.setText("上传");
+				btnShoot.setEnabled(true);
 			}
 
 			@Override
 			public void onError(String errorMessage) {
-				appendLogView("捕捉异常 " + errorMessage);
+				appendLogView("CaptureError " + errorMessage);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						btnShoot.setEnabled(true);
-						textCameraStatus.setText(R.string.text_camera_standby);
 					}
 				});
 			}
@@ -691,19 +615,16 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		protected Void doInBackground(Void... params) {
 			HttpConnector camera = new HttpConnector(getResources().getString(R.string.theta_ip_address));
 			Bitmap thumbnail = camera.getThumb(fileId);
-			
 			if (thumbnail != null) {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 				byte[] thumbnailImage = baos.toByteArray();
 				GLPhotoActivity.startActivityForResult(ImageListActivity.this, cameraIpAddress, fileId, thumbnailImage, true);
 				//将照片存储到 sd上面去
-//				camera.getThumb2(fileId);
-				
-			//	FileUtils.saveBitmap(thumbnail, System.currentTimeMillis()+"");
+				FileUtils.saveBitmap(thumbnail, System.currentTimeMillis()+"");
 				Toast.makeText(ImageListActivity.this, "------------", Toast.LENGTH_SHORT).show();
 			} else {
-				publishProgress("获取文件数据失败.");
+				publishProgress("failed to get file data.");
 			}
 			return null;
 		}
@@ -711,7 +632,6 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		@Override
 		protected void onProgressUpdate(String... values) {
 			for (String log : values) {
-				logViewer.append(log);
 			}
 		}
 	}
@@ -737,6 +657,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 						ConnectivityManager.setProcessDefaultNetwork(network);
 						mConnectionSwitchEnabled = true;
+
 						invalidateOptionsMenu();
 						appendLogView("connect to Wi-Fi AP");
 					}
@@ -747,13 +668,14 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 						mConnectionSwitchEnabled = false;
 						invalidateOptionsMenu();
-						appendLogView("与相机wifi断开了连接");
+						appendLogView("lost connection to Wi-Fi AP");
 					}
 				};
 				cm.requestNetwork(requestedNetwork, callback);
 			}
 		} else {
 			mConnectionSwitchEnabled = true;
+
 			invalidateOptionsMenu();
 		}
 	}
