@@ -42,6 +42,7 @@ OnFileBrowserListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e("UploadMapActivity","onCreate");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		FileBrowser fileBrowser = (FileBrowser)findViewById(R.id.filebrowser);
@@ -117,7 +118,7 @@ OnFileBrowserListener {
 					progressDialog.dismiss();
 					Looper.prepare();
 					Toast.makeText(UploadMapActivity.this, UploadMapActivity.this.getString(R.string.progress_ok), Toast.LENGTH_LONG).show();
-					UploadMapActivity.this.startActivity(new Intent(UploadMapActivity.this,ShowMapActivity.class));
+					UploadMapActivity.this.startActivity(new Intent(UploadMapActivity.this,LookShareActivity.class).putExtra("type", "house_share"));
 					Looper.loop();
 				}
 			});

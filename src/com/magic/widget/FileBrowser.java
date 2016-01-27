@@ -6,7 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class FileBrowser extends ListView implements
-		android.widget.AdapterView.OnItemClickListener
+android.widget.AdapterView.OnItemClickListener
 {
 	private final String namespace = "http://mobile.blogjava.net";
 	private String sdcardDirectory;
@@ -183,7 +191,7 @@ public class FileBrowser extends ListView implements
 			fileLayout.setOrientation(LinearLayout.HORIZONTAL);
 			fileLayout.setPadding(5, 10, 0, 10);
 			ImageView ivFile = new ImageView(context);
-			ivFile.setLayoutParams(new LayoutParams(48, 48));
+			ivFile.setLayoutParams(new LayoutParams(222, 110));
 			TextView tvFile = new TextView(context);
 			tvFile.setTextColor(android.graphics.Color.WHITE);
 			tvFile.setTextAppearance(context,
@@ -199,8 +207,10 @@ public class FileBrowser extends ListView implements
 			}
 			else if (fileList.get(position).isDirectory())
 			{
-				if (folderImageResId > 0)
-					ivFile.setImageResource(folderImageResId);
+				if (folderImageResId > 0){
+					//					ivFile.setImageResource(folderImageResId);
+					ivFile.setImageBitmap(getImageThumbnail(sdcardDirectory+fileList.get(position).getName(),222,110));
+				}
 				tvFile.setText(fileList.get(position).getName());
 			}
 			else
@@ -217,10 +227,14 @@ public class FileBrowser extends ListView implements
 					}
 
 				}
-				if (fileImageResId > 0)
-					ivFile.setImageResource(fileImageResId);
-				else if (otherFileImageResId > 0)
-					ivFile.setImageResource(otherFileImageResId);
+				if (fileImageResId > 0){
+//					ivFile.setImageResource(fileImageResId);
+					ivFile.setImageBitmap(getImageThumbnail(sdcardDirectory+fileList.get(position).getName(),222,110));
+				}
+				else if (otherFileImageResId > 0){
+//					ivFile.setImageResource(otherFileImageResId);
+					ivFile.setImageBitmap(getImageThumbnail(sdcardDirectory+fileList.get(position).getName(),222,110));
+				}
 			}
 
 			tvFile.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
@@ -235,4 +249,35 @@ public class FileBrowser extends ListView implements
 	{
 		this.onFileBrowserListener = listener;
 	}
+
+	private Bitmap getImageThumbnail(String imagePath, int width, int height) {
+		Bitmap bitmap = null;
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		// 获取这个图片的宽和高，注意此处的bitmap为null
+		bitmap = BitmapFactory.decodeFile(imagePath, options);
+		options.inJustDecodeBounds = false; // 设为 false
+		// 计算缩放比
+		int h = options.outHeight;
+		int w = options.outWidth;
+		int beWidth = w / width;
+		int beHeight = h / height;
+		int be = 1;
+		if (beWidth < beHeight) {
+			be = beWidth;
+		} else {
+			be = beHeight;
+		}
+		if (be <= 0) {
+			be = 1;
+		}
+		options.inSampleSize = be;
+		// 重新读入图片，读取缩放后的bitmap，注意这次要把options.inJustDecodeBounds 设为 false
+		bitmap = BitmapFactory.decodeFile(imagePath, options);
+		// 利用ThumbnailUtils来创建缩略图，这里要指定要缩放哪个Bitmap对象
+		bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
+				ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+		return bitmap;
+	}
+
 }

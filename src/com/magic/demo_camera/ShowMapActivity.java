@@ -25,6 +25,7 @@ public class ShowMapActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("ShowMapActivity","onCreate");
         setContentView(R.layout.activity_show_map);
         initView();
 

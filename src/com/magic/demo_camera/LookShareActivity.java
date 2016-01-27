@@ -76,6 +76,7 @@ public class LookShareActivity extends Activity implements Callback {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e("LookShareActivity","onCreate");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_lookshare);
 		
@@ -98,7 +99,7 @@ public class LookShareActivity extends Activity implements Callback {
 		    listView.setAdapter(mAdapter);
 //			列表选择
 			tev_title_content.setText("旅游分享");
-		} else {
+		}else if(("house_share").equals(type)) {
 		    mAdapter = new LookShareAdpter(this, list,2,this);
 		    listView.setAdapter(mAdapter);
 //			列表选择

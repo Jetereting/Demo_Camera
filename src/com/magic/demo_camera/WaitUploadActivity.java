@@ -49,6 +49,7 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e("WaitUploadActivity","onCreate");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_waitupload);
 		
@@ -69,7 +70,7 @@ public class WaitUploadActivity extends Activity implements OnItemClickListener{
 		type = getIntent().getStringExtra("type");
 		if (type.equals("trip_upload")) {
 			tev_title_content.setText("旅游上传");
-		} else {
+		}else if(("house_upload").equals(type)) {
 			tev_title_content.setText("房产上传");
 		}
 //		上传点击
