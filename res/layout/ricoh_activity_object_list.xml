@@ -19,7 +19,6 @@
         app:layout_heightPercent="50%w"
         app:layout_marginTopPercent="60%"
         app:layout_marginLeftPercent="25%"
-        android:background="@null"
         android:text="拍照"/>
 
 </com.zhy.android.percent.support.PercentFrameLayout>

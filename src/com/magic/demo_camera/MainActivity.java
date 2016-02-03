@@ -142,10 +142,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		Intent home = new Intent(Intent.ACTION_MAIN);
-		home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		home.addCategory(Intent.CATEGORY_HOME);
-		startActivity(home);
+		if(keyCode==KeyEvent.KEYCODE_BACK){
+			Intent home = new Intent(Intent.ACTION_MAIN);
+			home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			home.addCategory(Intent.CATEGORY_HOME);
+			startActivity(home);
+		}
 		return true;
 	}
 

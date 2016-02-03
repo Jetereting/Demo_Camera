@@ -74,6 +74,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 	private LoadObjectListTask sampleTask = null;
 	private ShowLiveViewTask livePreviewTask = null;
 	private GetImageSizeTask getImageSizeTask = null;
+	private String latestCapturedFileId;
 
 	/**
 	 * onCreate Method
@@ -98,14 +99,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 					//拍摄任务
 					new ShootTask().execute();
 				}else if("上传".equals(btnShoot.getText().toString())){
-//					ImageRow selectedItem = (ImageRow) parent.getItemAtPosition(position);
-//					if (selectedItem.isPhoto()) {
-//						byte[] thumbnail = selectedItem.getThumbnail();
-//						String fileId = selectedItem.getFileId();
-//						GLPhotoActivity.startActivityForResult(ImageListActivity.this, cameraIpAddress, fileId, thumbnail, false);
-//					} else {
-//						Toast.makeText(getApplicationContext(), "This isn't a photo.", Toast.LENGTH_SHORT).show();
-//					}
+					new GetThumbnailTask(latestCapturedFileId).execute();
 				}
 			}
 		});
@@ -549,7 +543,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 		}
 
 		private class CaptureListener implements HttpEventListener {
-			private String latestCapturedFileId;
+			
 			private boolean ImageAdd = false;
 
 			@Override
@@ -564,22 +558,23 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 			@Override
 			public void onObjectChanged(String latestCapturedFileId) {
 				this.ImageAdd = true;
-				this.latestCapturedFileId = latestCapturedFileId;
-				appendLogView("ImageAdd:FileId " + this.latestCapturedFileId);
+				latestCapturedFileId = latestCapturedFileId;
+				appendLogView("ImageAdd:FileId " + latestCapturedFileId);
 			}
 
 			@Override
 			public void onCompleted() {
-				appendLogView("CaptureComplete");
-				if (ImageAdd) {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							btnShoot.setEnabled(true);
-							new GetThumbnailTask(latestCapturedFileId).execute();
-						}
-					});
-				}
+//				appendLogView("CaptureComplete");
+//				if (ImageAdd) {
+//					runOnUiThread(new Runnable() {
+//						@Override
+//						public void run() {
+//							btnShoot.setEnabled(true);
+//							new GetThumbnailTask(latestCapturedFileId).execute();
+//						}
+//					});
+//				}
+				Toast.makeText(getApplicationContext(), "拍照完成！", Toast.LENGTH_SHORT).show();
 				btnShoot.setText("上传");
 				btnShoot.setEnabled(true);
 			}
@@ -613,6 +608,7 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 
 		@Override  
 		protected Void doInBackground(Void... params) {
+			btnShoot.setEnabled(false);
 			HttpConnector camera = new HttpConnector(getResources().getString(R.string.theta_ip_address));
 			Bitmap thumbnail = camera.getThumb(fileId);
 			if (thumbnail != null) {
@@ -622,7 +618,9 @@ public class ImageListActivity extends Activity implements ImageSizeDialog.Dialo
 				GLPhotoActivity.startActivityForResult(ImageListActivity.this, cameraIpAddress, fileId, thumbnailImage, true);
 				//将照片存储到 sd上面去
 				FileUtils.saveBitmap(thumbnail, System.currentTimeMillis()+"");
-				Toast.makeText(ImageListActivity.this, "------------", Toast.LENGTH_SHORT).show();
+				Toast.makeText(ImageListActivity.this, "上传完成！", Toast.LENGTH_SHORT).show();
+				btnShoot.setText("拍照");
+				btnShoot.setEnabled(true);
 			} else {
 				publishProgress("failed to get file data.");
 			}
